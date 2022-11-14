@@ -1,17 +1,18 @@
 class NotesHandler {
-  constructor(service) {
+  constructor(service, validator) {
     this._service = service;
+    this._validator = validator;
 
     this.postNoteHandler = this.postNoteHandler.bind(this);
     this.getNotesHandler = this.getNotesHandler.bind(this);
     this.getNoteByIdHandler = this.getNoteByIdHandler.bind(this);
     this.putNoteByIdHandler = this.putNoteByIdHandler.bind(this);
     this.deleteNoteByIdHandler = this.deleteNoteByIdHandler.bind(this);
-
   }
 
   postNoteHandler(request, h) {
     try {
+      this._validator.validateNotePayload(request.payload);
       const { title = "untitled", body, tags } = request.payload;
 
       const noteId = this._service.addNote({ title, body, tags });
@@ -70,6 +71,7 @@ class NotesHandler {
 
   putNoteByIdHandler(request, h) {
     try {
+      this._validator.validateNotePayload(request.payload);
       const { id } = request.params;
       this._service.editNoteById(id, request.payload);
 
@@ -90,19 +92,19 @@ class NotesHandler {
 
   deleteNoteByIdHandler(request, h) {
     try {
-        const { id } = request.params;
-        this._service.deleteNoteById(id);
-        return {
-            status: "success",
-            message: "Catatan Berhasil dihapus",
-        };
+      const { id } = request.params;
+      this._service.deleteNoteById(id);
+      return {
+        status: "success",
+        message: "Catatan Berhasil dihapus",
+      };
     } catch (error) {
-        const response = h.response({
-            status: "fail",
-            message: error.message,
-        });
-        response.code(404);
-        return response;
+      const response = h.response({
+        status: "fail",
+        message: error.message,
+      });
+      response.code(404);
+      return response;
     }
   }
 }
