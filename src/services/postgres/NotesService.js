@@ -1,6 +1,6 @@
-const { nanoid } = require("nanoid");
-const { Pool } = require("pg");
-const InvariantError = require("../../exceptions/InvariantError");
+const { nanoid } = require('nanoid');
+const { Pool } = require('pg');
+const InvariantError = require('../../exceptions/InvariantError');
 
 class NotesService {
   constructor() {
@@ -12,14 +12,14 @@ class NotesService {
     const updatedAt = createdAt;
 
     const query = {
-      text: "INSERT INTO notes VALUES($1, $2, $3, $4, $5, $6) RETURNING *",
+      text: 'INSERT INTO notes VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
       values: [id, title, body, tags, createdAt, updatedAt],
     };
 
     const result = await this._pool.query(query);
 
     if (!result.row[0].id) {
-      throw new InvariantError("Catatan gagal ditambahkan");
+      throw new InvariantError('Catatan gagal ditambahkan');
     }
 
     return result.row[0].id;

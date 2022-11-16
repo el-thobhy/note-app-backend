@@ -1,9 +1,9 @@
-require("dotenv").config();
+require('dotenv').config();
 
-const Hapi = require("@hapi/hapi");
-const notes = require("./api/notes");
-const NotesService = require("./services/inMemory/NotesService");
-const NotesValidator = require("./validator/notes");
+const Hapi = require('@hapi/hapi');
+const notes = require('./api/notes');
+const NotesService = require('./services/inMemory/NotesService');
+const NotesValidator = require('./validator/notes');
 
 const init = async () => {
   const notesService = new NotesService();
@@ -13,7 +13,7 @@ const init = async () => {
     host: process.env.HOST,
     routes: {
       cors: {
-        origin: ["*"],
+        origin: ['*'],
       },
     },
   });
