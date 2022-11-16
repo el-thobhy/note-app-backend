@@ -20,11 +20,11 @@ class NotesService {
 
     const result = await this._pool.query(query);
 
-    if (!result.row[0].id) {
+    if (!result.rows[0].id) {
       throw new InvariantError('Catatan gagal ditambahkan');
     }
 
-    return result.row[0].id;
+    return result.rows[0].id;
   }
 
   async getNotes() {
@@ -42,7 +42,7 @@ class NotesService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError('Catatan tidak ditemukan');
+      throw new NotFoundError('Catatan gagal ditemukan');
     }
 
     return result.rows.map(mapDBToModel)[0];
@@ -51,14 +51,14 @@ class NotesService {
   async editNoteById(id, { title, body, tags }) {
     const updatedAt = new Date().toISOString();
     const query = {
-      text: 'UPDATE notes SET title = $1, body = $1, tags = $3, updated_at = $4 WHERE id = $5 RETURNING id',
+      text: 'UPDATE notes SET title = $1, body = $2, tags = $3, updated_at = $4 WHERE id = $5 RETURNING id',
       values: [title, body, tags, updatedAt, id],
     };
 
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError('Gagal memperbarui catatan. Id tidak ditemukan');
+      throw new NotFoundError('Gagal memperbarui catatan, id tidak ditemukan');
     }
   }
 
